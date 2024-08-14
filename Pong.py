@@ -4,7 +4,7 @@ pygame.init()
 
 WIDTH, HEIGHT = 1280, 720
  
-FONT = pg.font.Font("Satoshi-Variable.ttf", int(WIDTH/20))
+FONT = pygame.font.Font("Satoshi-Variable.ttf", int(WIDTH/20))
 
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
