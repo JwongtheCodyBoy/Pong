@@ -10,6 +10,10 @@ SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Pong")
 CLOCK = pygame.time.Clock()
 
+def drawDotLine():
+    for i in range(-16, HEIGHT, HEIGHT//14):
+        pygame.draw.rect(SCREEN, (255,255,255), (WIDTH//2+10, i, 10, HEIGHT//20))
+
 def PlayGame():
     # Paddles
     player = pygame.Rect(WIDTH-110, HEIGHT/2 -50, 10,100)
@@ -17,7 +21,8 @@ def PlayGame():
     opponent_score, player_score = 0, 0
 
     # Ball
-    ball = pygame.Rect(WIDTH/2 -10, HEIGHT/2 -10, 20,20)
+    ball_radius = 20
+    ball = pygame.Rect(WIDTH/2 -10, HEIGHT/2 -10, ball_radius,ball_radius)
     x_speed, y_speed = 1,1
 
     while True:
@@ -32,9 +37,9 @@ def PlayGame():
 
         if lonely:
             if opponent.y < ball.y:
-                opponent.top += 1
+                opponent.top += 2
             if opponent.bottom > ball.y:
-                opponent.bottom -=1
+                opponent.bottom -=2
         else:
             if keys_pressed[pygame.K_w]:
                 if opponent.top > 0:
@@ -48,23 +53,33 @@ def PlayGame():
                 pygame.quit()
                 sys.exit()
 
-        if ball.y >= HEIGHT:
-            y_speed = -1
-        if ball.y <= 0:
-            y_speed = 1
+        if ball.y + ball_radius >= HEIGHT:
+            y_speed *= -1
+        elif ball.y - ball_radius <= 0:
+            y_speed *= -1
+
+        if player.x - ball.width <= ball.x <= player.x and ball.y in range(player.top-ball.width, player.bottom+ball.width):    #basic: if ball is touching player in both X and Y then redirect        #complex If ball x is in the surface of the paddle and half of the paddle then While also ball.y is inside the Y Positions then redirect
+            x_speed = -1
+
+            middleplayer = player.y + player.height/2
+            differenceY =  ball.y - middleplayer
+            y_speed = differenceY / (player.height/2)
+            
+        if opponent.x - ball.width <= ball.x <= opponent.x and ball.y in range(opponent.top-ball.width, opponent.bottom+ball.width):    #basic: if ball is touching player in both X and Y then redirect        #complex If ball x is in the surface of the paddle and half of the paddle then While also ball.y is inside the Y Positions then redirect
+            x_speed = 1
+
+            middleopponent = opponent.y + opponent.height/2
+            differenceY =  ball.y - middleopponent
+            y_speed = differenceY / (opponent.height/4)
+
         if ball.x <= 0:
             player_score += 1
             ball.center = (WIDTH/2, HEIGHT/2)
             x_speed, y_speed = random.choice([-1, 1]), random.choice([-1, 1])   # no randint because if randint 0 is < 1 and > -1, and 0 speed = shit
-        if ball.x >= WIDTH:
+        elif ball.x >= WIDTH:
             opponent_score += 1
             ball.center = (WIDTH/2, HEIGHT/2)
             x_speed, y_speed = random.choice([-1, 1]), random.choice([-1, 1])
-
-        if player.x - ball.width <= ball.x <= player.x and ball.y in range(player.top-ball.width, player.bottom+ball.width):    #basic: if ball is touching player in both X and Y then redirect        #complex If ball x is in the surface of the paddle and half of the paddle then While also ball.y is inside the Y Positions then redirect
-            x_speed = -1
-        if opponent.x - ball.width <= ball.x <= opponent.x and ball.y in range(opponent.top-ball.width, opponent.bottom+ball.width):    #basic: if ball is touching player in both X and Y then redirect        #complex If ball x is in the surface of the paddle and half of the paddle then While also ball.y is inside the Y Positions then redirect
-            x_speed = 1
 
         ball.x += x_speed * 2
         ball.y += y_speed * 2
@@ -77,9 +92,10 @@ def PlayGame():
         pygame.draw.rect(SCREEN, "white", player)
         pygame.draw.rect(SCREEN, "white", opponent)
         pygame.draw.circle(SCREEN, 'white', ball.center,10)
+        drawDotLine()
 
-        SCREEN.blit(player_score_text, (WIDTH/2+50, 50))
-        SCREEN.blit(opponent_score_text, (WIDTH/2-50, 50))
+        SCREEN.blit(player_score_text, (WIDTH/2+100, 50))
+        SCREEN.blit(opponent_score_text, (WIDTH/2-120, 50))
 
         pygame.display.update()
         CLOCK.tick(300)
