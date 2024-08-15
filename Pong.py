@@ -36,9 +36,11 @@ def PlayGame():
                 player.top += 2
 
         if lonely:
-            if opponent.y < ball.y:
+            opponent_mid = opponent.y + opponent.height/2
+            margin = int(opponent.height*0.2)
+            if opponent_mid + margin < ball.y:      #for hard mode use opponent.y instead of opponent_mid + margin  Increase dificluty by lowering margin
                 opponent.top += 2
-            if opponent.bottom > ball.y:
+            if opponent_mid + margin > ball.y:      #for hard mode use opponent.bottom instead of opponent_mid - margin
                 opponent.bottom -=2
         else:
             if keys_pressed[pygame.K_w]:
