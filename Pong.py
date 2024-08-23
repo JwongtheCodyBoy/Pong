@@ -72,7 +72,7 @@ def PlayGame():
 
             middleopponent = opponent.y + opponent.height/2
             differenceY =  ball.y - middleopponent
-            y_speed = differenceY / (opponent.height/4)
+            y_speed = differenceY / (opponent.height/2)
 
         if ball.x <= 0:
             player_score += 1
