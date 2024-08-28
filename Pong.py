@@ -37,8 +37,8 @@ def PlayGame():
 
         if lonely:
             opponent_mid = opponent.y + opponent.height/2
-            margin = int(opponent.height*0.2)
-            if opponent_mid + margin < ball.y:      #for hard mode use opponent.y instead of opponent_mid + margin  Increase dificluty by lowering margin
+            margin = int(opponent.height*0.65)
+            if opponent_mid - margin < ball.y:      #for hard mode use opponent.y instead of opponent_mid + margin  Increase dificluty by lowering margin
                 opponent.top += 2
             if opponent_mid + margin > ball.y:      #for hard mode use opponent.bottom instead of opponent_mid - margin
                 opponent.bottom -=2
@@ -144,6 +144,13 @@ def menu():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    print("Play button clicked!")
+                    PlayGame()
+                elif event.key == pygame.K_SLASH:
+                    print("Enter Lonely Mode")
+                    lonely = not lonely
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if play_button_rect.collidepoint(event.pos):
                     print("Play button clicked!")
