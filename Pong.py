@@ -28,6 +28,9 @@ def PlayGame():
     while True:
         keys_pressed = pygame.key.get_pressed()
 
+        if keys_pressed[pygame.K_BACKSPACE]:
+            menu()
+
         if keys_pressed[pygame.K_UP]:
             if player.top > 0:
                 player.top -= 2
